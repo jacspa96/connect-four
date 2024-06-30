@@ -26,25 +26,14 @@ fun setUpGame(): Game {
     println("$dimensions board")
 
     val (rows, columns) = dimensions.split(" X ").map { it.toInt() }
-    val board = MutableList(rows) { MutableList(columns) {" "} }
-    val game = Game(rows, columns, board, firstPlayer, secondPlayer)
+    val board = MutableList(rows) { MutableList(columns) { " " } }
+    val game = Game(rows, columns, board, firstPlayer, secondPlayer, 0)
 
     return game
 }
 
-fun getDimensionsFromUserOrDefault(): String {
-    println("Set the board dimensions (Rows x Columns)")
-    println("Press Enter for default (6 x 7)")
-    val dimensions = readln().trim().uppercase()
-        .replace("\\s+".toRegex(), "")
-        .replace("X", " X ")
-    return dimensions.ifEmpty {
-        DEFAULT_DIMENSIONS
-    }
-}
-
 fun playGame(game: Game) {
-    printBoard(game)
+    game.printBoard()
     var firstPlayerTurn = true;
     while (true) {
         var column: String
@@ -55,17 +44,26 @@ fun playGame(game: Game) {
             column = readln()
         } while (!isColumnCorrect(column, game))
         if (column == "end") {
-            println("Game over!")
-            return
+            break
         }
         val columnNumber = column.toInt() - 1  // deduct 1 because of 0 indexing
         for (i in game.rows - 1 downTo 0) {
             if (game.board[i][columnNumber] == " ") {
-               game.board[i][columnNumber] = currSymbol
-               break
+                game.board[i][columnNumber] = currSymbol
+                game.filledCells++
+                break
             }
         }
-        printBoard(game)
+        game.printBoard()
+        if (game.isGameWon(currSymbol)) {
+            println("Player $currPlayer won")
+            break
+        }
+        if (game.filledCells == game.rows * game.columns) {
+            println("It is a draw")
+            break
+        }
         firstPlayerTurn = !firstPlayerTurn
     }
+    println("Game over!")
 }

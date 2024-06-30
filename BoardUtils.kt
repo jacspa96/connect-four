@@ -6,6 +6,19 @@ val dimensionsRegex = Regex(DIMENSIONS_REGEX_PATTERN)
 const val COLUMN_REGEX_PATTERN = "[0-9]+"
 val columnRegex = Regex(COLUMN_REGEX_PATTERN)
 
+const val CHECK_WINDOW = 3
+
+fun getDimensionsFromUserOrDefault(): String {
+    println("Set the board dimensions (Rows x Columns)")
+    println("Press Enter for default (6 x 7)")
+    val dimensions = readln().trim().uppercase()
+        .replace("\\s+".toRegex(), "")
+        .replace("X", " X ")
+    return dimensions.ifEmpty {
+        DEFAULT_DIMENSIONS
+    }
+}
+
 fun areDimensionsCorrect(dimensions: String): Boolean {
     if (!dimensionsRegex.matches(dimensions)) {
         println("Invalid input")
@@ -23,34 +36,6 @@ fun areDimensionsCorrect(dimensions: String): Boolean {
     return true
 }
 
-fun printBoard(game: Game) {
-    printBoardHeader(game.columns)
-    for (i in 0 until game.rows) {
-        for (j in 0 until game.columns) {
-            print("║")
-            print(game.board[i][j])
-        }
-        println("║")
-    }
-    printBoardFooter(game.columns)
-}
-
-private fun printBoardHeader(columns: Int) {
-    print(" ")
-    for (i in 1..columns) {
-        print(i)
-        print(" ")
-    }
-    println()
-}
-
-private fun printBoardFooter(columns: Int) {
-    print("╚═")
-    repeat(columns - 1) {
-        print("╩═")
-    }
-    println("╝")
-}
 
 fun isColumnCorrect(column: String, game: Game): Boolean {
     if (column == "end") {
@@ -80,3 +65,4 @@ private fun isColumnFull(columnNumber: Int, game: Game): Boolean {
     }
     return true
 }
+
