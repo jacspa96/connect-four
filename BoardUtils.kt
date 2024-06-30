@@ -3,6 +3,9 @@ package connectfour
 const val DIMENSIONS_REGEX_PATTERN = "[0-9]+ X [0-9]+"
 val dimensionsRegex = Regex(DIMENSIONS_REGEX_PATTERN)
 
+const val NUMBER_OF_GAMES_REGEX_PATTERN = "[1-9][0-9]*"
+val numberOfGamesRegex = Regex(NUMBER_OF_GAMES_REGEX_PATTERN)
+
 const val COLUMN_REGEX_PATTERN = "[0-9]+"
 val columnRegex = Regex(COLUMN_REGEX_PATTERN)
 
@@ -31,6 +34,22 @@ fun areDimensionsCorrect(dimensions: String): Boolean {
     }
     if (columns < 5 || columns > 9) {
         println("Board columns should be from 5 to 9")
+        return false
+    }
+    return true
+}
+
+fun getNumberOfGamesOrDefault(): String {
+    println("Do you want to play single or multiple games?")
+    println("For a single game, input 1 or press Enter")
+    println("Input a number of games:")
+    val numberOfGames = readln()
+    return numberOfGames.ifEmpty { "1" }
+}
+
+fun isNumberOfGamesCorrect(numberOfGames: String): Boolean {
+    if (!numberOfGamesRegex.matches(numberOfGames)) {
+        println("Invalid input")
         return false
     }
     return true
@@ -65,4 +84,3 @@ private fun isColumnFull(columnNumber: Int, game: Game): Boolean {
     }
     return true
 }
-

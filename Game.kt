@@ -3,10 +3,14 @@ package connectfour
 class Game(
     val rows: Int,
     val columns: Int,
-    val board: MutableList<MutableList<String>>,
+    var board: MutableList<MutableList<String>>,
     val firstPlayer: String,
     val secondPlayer: String,
-    var filledCells: Int
+    var filledCells: Int,
+    val numberOfGames: Int,
+    var scoreFirstPlayer: Int = 0,
+    var scoreSecondPlayer: Int = 0,
+    var isGameFinished: Boolean = false
 ) {
     fun printBoard() {
         printBoardHeader(this.columns)
@@ -97,5 +101,17 @@ class Game(
             }
         }
         return false
+    }
+
+    fun resetGame() {
+        this.board = MutableList(this.rows) { MutableList(this.columns) { " " } }
+        this.filledCells = 0
+        this.isGameFinished = false
+    }
+
+    fun printScore() {
+        println("Score")
+        print("${this.firstPlayer}: ${this.scoreFirstPlayer} ")
+        println("${this.secondPlayer}: ${this.scoreSecondPlayer}")
     }
 }
